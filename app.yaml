@@ -1,6 +1,7 @@
 application: appname
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: true
 
 # This is how you control where your app is deployed.
 version: stable
