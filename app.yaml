@@ -17,7 +17,7 @@ handlers:
   static_files: ui/\1/index.html
   upload: ui/(.+)/index.html
 
-# serve all other requests from www
+# serve all other requests from the ui folder
 - url: /
   static_dir: ui
 
