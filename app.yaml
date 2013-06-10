@@ -1,0 +1,23 @@
+application: appname
+runtime: python
+api_version: 1
+
+# This is how you control where your app is deployed.
+version: stable
+
+handlers:
+
+# serve ui/index.html for the root request
+- url: /
+  static_files: ui/index.html
+  upload: ui/index.html
+
+# serve index.html when a directory is requested
+- url: /(.+)/
+  static_files: ui/\1/index.html
+  upload: ui/(.+)/index.html
+
+# serve all other requests from www
+- url: /
+  static_dir: ui
+
