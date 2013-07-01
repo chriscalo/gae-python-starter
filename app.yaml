@@ -1,4 +1,6 @@
+# The name of your app. Create yours at https://appengine.google.com/start/createapp?
 application: appname
+
 runtime: python27
 api_version: 1
 threadsafe: true
