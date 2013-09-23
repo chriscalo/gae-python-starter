@@ -1,11 +1,27 @@
 <!DOCTYPE html>
-<html ng-app>
+<!--
+  HTML bootstrap.
+  Author: ccalo@google.com (Chris Calo)
+  -->
+<html lang="en" ng-app="appname" ng-controller="ContentController">
   <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+
     <title>My App</title>
-    <script src="/lib/jquery-1.10.1.min.js"></script>
-    <script src="/lib/angular-1.0.6.min.js"></script>
+    <meta name="description" content="Description of your document." />
+    <meta name="author" content="chris.calo@gmail.com (Chris Calo)" />
+    
+    <link rel="stylesheet" href="/style/style.css"/>
+    <script src="/lib/jquery/jquery-2.0.3.js"></script>
+    <script src="/lib/angular/angular-1.0.8.min.js"></script>
+    <script src="/lib/js-yaml/js-yaml.js"></script>
+    <script src="/lib/markdown/markdown.js"></script>
+    <script src="/app/main.js"></script>
   </head>
   <body ng-init="name = 'World'">
     Hello, {{name}}!
+    <div>{{content.description}}</div>
   </body>
 </html>

@@ -1,0 +1,7 @@
+description: AppEngine Starter content file
+author: chris.calo@gmail.com (Chris Calo)
+notes:
+  - This document is written in the YAML format. New lines are collapsed to a
+    single space, and blank lines are converted to new lines.
+  - You can write blocks of text in the Markdown format, and there is an Angular
+    directive that will convert it to HTML.
