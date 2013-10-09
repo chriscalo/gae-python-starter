@@ -16,7 +16,7 @@
   /**
    * Directive for loading JSON data into a scope variable. Example:
    * 
-   *   <data name="foo.bar.baz" src="/data/foo/bar/baz/"></data>
+   *   <data name="mydata" src="/foo/bar.yaml" type="yaml"></data>
    *   
    * TODO: what if a name has spaces in it?
    * TODO: smarter ways of determining type.
