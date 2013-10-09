@@ -3,7 +3,7 @@
   HTML bootstrap.
   Author: ccalo@google.com (Chris Calo)
   -->
-<html lang="en" ng-app="appname" ng-controller="ContentController">
+<html lang="en" ng-app="appname">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -21,6 +21,7 @@
     <script src="/app/main.js"></script>
   </head>
   <body ng-init="name = 'World'">
+    <data name="content" src="/content/content.yaml" type="yaml"></data>
     Hello, {{name}}!
     <div>{{content.description}}</div>
   </body>

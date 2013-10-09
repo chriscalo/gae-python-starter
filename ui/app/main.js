@@ -14,25 +14,58 @@
   var app = angular.module("appname", []);
   
   /**
-   * Loads /content/content.yaml into scope. Reference this controller on the
-   * <html> element:
+   * Directive for loading JSON data into a scope variable. Example:
+   * 
+   *   <data name="foo.bar.baz" src="/data/foo/bar/baz/"></data>
    *   
-   *   <html ng-app="app" ng-controller="ContentController">
-   *   
+   * TODO: what if a name has spaces in it?
+   * TODO: smarter ways of determining type.
+   * TODO: What if response is already a parsed object?
    */
-  app.controller("ContentController", function ($http, $scope) {
-    $http.get("/content/content.yaml").then(function success(response) {
-      $scope.content = jsyaml.load(response.data);
-      document.body.classList.remove("loading");
-    }, function failure(response) {
-      $(document.body).html("Couldn't load content. <a href='javascript:location.reload(true)'>Try again</a>?");
-      $(document.body).css({
-        "margin": "72px auto",
-        "width": "500px",
-        "text-align": "center",
-      });
-      document.body.classList.remove("loading");
-    });
+  app.directive("data", function ($http) {
+    return {
+      restrict: "E",
+      link: function ($scope, $elem, attrs) {
+        var name = attrs.name;
+        var src = attrs.src;
+        var type = attrs.type;
+        
+        var parsers = {
+          "yaml": jsyaml.load.bind(jsyaml),
+        };
+        
+        // must have name, type, and src attributes
+        if (name && src && parsers.hasOwnProperty(type)) {
+          $http.get(src).then(function success(response) {
+            var parse = parsers[type];
+            // split names like name="foo.bar.baz"
+            var names = name.split(".");
+            var finalName = names.pop();
+            var currentNode = $scope;
+            
+            // build structure when name="foo.bar.baz"
+            while (names.length > 0) {
+              var currentName = names.shift();
+              if (currentNode[currentName] === undefined) {
+                currentNode = currentNode[currentName] = {};
+              } else {
+                currentNode = currentNode[currentName];
+              }
+            }
+            
+            // set data on final name
+            currentNode[finalName] = parse(response.data);
+          }, function failure(response, status) {
+            var msg = "Failed to load data. {status}: {response}"
+              .replace("{status}", status)
+              .replace("{response}", response);
+            console.error(msg);
+          });
+        } else {
+          console.error('<data> elements must have name, src, and type="yaml" attributes.');
+        }
+      },
+    };
   });
   
   /**
@@ -40,38 +73,17 @@
    *   
    *   <div markdown="some.scope.variable">Loading…</div>
    *   
-   * Looks for link definitions in the "links" section of your YAML file.
    */
-  app.directive("markdown", function () {
-    // Adds Markdown-style link definitions to the end of a string.
-    function appendMarkdownLinkDefs(str, scope) {
-      var links = [];
-      try {
-        $.each(scope.content.links, function (name, href) {
-          var line = "[{name}]: {href}"
-            .replace("{name}", name)
-            .replace("{href}", href);
-          links.push(line);
+  app.directive("markdown", function factory() {
+    return function link(scope, elem, attrs) {
+      scope.$watch(attrs.markdown, function (content) {
+        if (!content) return;
+        content = content.replace(/\n/g, "\n\n");
+        elem.html(markdown.toHTML(content));
+        elem.find("a").each(function (i, link) {
+          $(link).attr("target", "_blank");
         });
-      } catch (error) {
-        // pass
-      }
-      return "{content}\n\n{links}"
-        .replace("{content}", str)
-        .replace("{links}", links.join("\n"))
-        .replace(/\n/g, "\n\n"); // YAML collapses new lines too much
-    }
-    
-    return {
-      link: function (scope, elem, attrs) {
-        scope.$watch(attrs.markdown, function (content) {
-          var str = appendMarkdownLinkDefs(content, scope);
-          elem.html(markdown.toHTML(str));
-          elem.find("a").each(function (i, link) {
-            $(link).attr("target", "_blank");
-          });
-        });
-      },
+      });
     };
   });
 })();
