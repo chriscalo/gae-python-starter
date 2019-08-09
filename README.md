@@ -1,4 +1,4 @@
-# appengine-starter
+# gae-python-starter
 
 Minimal boilerplate for a Python static file server running on AppEngine.
 Includes jQuery and AngularJS.
